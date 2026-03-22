@@ -114,7 +114,7 @@ export default function StaffManagement() {
     const salary = formData.get("salary");
     if (salary) payload.salary = parseFloat(salary as string);
 
-    const { error } = await supabase.from("staff").insert([payload]);
+    const { error } = await supabase.from("staff").insert([payload as any]);
     if (error) alert(error.message);
     else {
       closeDrawer();
@@ -135,7 +135,7 @@ export default function StaffManagement() {
     const salary = formData.get("salary");
     if (salary) payload.salary = parseFloat(salary as string);
 
-    const { error } = await supabase.from("staff").update(payload).eq("id", selectedStaff.id);
+    const { error } = await supabase.from("staff").update(payload as any).eq("id", selectedStaff.id);
     if (error) alert(error.message);
     else {
       closeDrawer();

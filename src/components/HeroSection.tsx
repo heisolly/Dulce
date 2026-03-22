@@ -133,10 +133,10 @@ export default function HeroSection() {
                 className={`absolute flex items-center gap-3 pl-1.5 py-1.5 pr-5 rounded-full shadow-[0_12px_24px_rgba(45,27,20,0.08)] cursor-pointer pointer-events-auto transition-all duration-300 ${activeCategory === cat.id ? "bg-[#BF5933] scale-110 shadow-[0_15px_30px_rgba(191,89,51,0.3)] z-40" : "bg-white hover:scale-105"}`}
                 style={{ right: cat.right, top: cat.top }}
               >
-                 <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center overflow-hidden shadow-sm shrink-0">
-                    <Image src={cat.iconSrc} alt={cat.label} width={32} height={32} className="object-cover w-full h-full" />
+                 <div className="w-10 h-10 md:w-11 md:h-11 rounded-full bg-white flex items-center justify-center overflow-hidden shadow-sm shrink-0">
+                    <Image src={cat.iconSrc} alt={cat.label} width={44} height={44} className="object-cover w-full h-full" />
                  </div>
-                 <span className={`font-heading font-black text-[11px] uppercase tracking-wider transition-colors ${activeCategory === cat.id ? "text-white" : "text-[#2D1B14]"}`}>
+                 <span className={`font-heading font-black text-[12px] md:text-[13px] uppercase tracking-wider transition-colors ${activeCategory === cat.id ? "text-white" : "text-[#2D1B14]"}`}>
                    {cat.label}
                  </span>
               </motion.div>
@@ -145,16 +145,16 @@ export default function HeroSection() {
 
           <motion.div
             style={{ rotate: rotateImage }}
-            className="relative w-[100%] h-[100%] lg:w-[105%] lg:h-[105%] lg:translate-x-[-8%] z-20"
+            className="relative w-[115%] h-[115%] sm:w-[125%] sm:h-[125%] lg:w-[145%] lg:h-[145%] lg:translate-x-[-6%] z-20"
           >
              <AnimatePresence mode="wait">
                <motion.div
                   key={activeCategory}
-                  initial={{ opacity: 0, scale: 0.8, rotate: -25 }}
-                  animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                  exit={{ opacity: 0, scale: 0.8, rotate: 25 }}
-                  transition={{ duration: 0.5, type: "spring", stiffness: 80, damping: 15 }}
-                  className="absolute inset-0 filter drop-shadow-[0_45px_75px_rgba(0,0,0,0.12)]"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  className="absolute inset-0 filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.08)]"
                >
                  <Image
                     src={activeHeroImage}
