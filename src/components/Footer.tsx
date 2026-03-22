@@ -53,9 +53,10 @@ const ArrowUpRight = () => (
 
 const links = [
   { label: "Menu", href: "/menu" },
-  { label: "Our Story", href: "#our-story" },
-  { label: "Locations", href: "#locations" },
-  { label: "Private Events", href: "#" },
+  { label: "Reservations", href: "/reservations" },
+  { label: "Blog", href: "/blog" },
+  { label: "Contact", href: "/contact" },
+  { label: "Our Story", href: "/#our-story" },
 ];
 
 import { usePathname } from "next/navigation";

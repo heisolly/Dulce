@@ -3,7 +3,6 @@ import { Bricolage_Grotesque, Caveat, Playfair_Display, DM_Sans } from "next/fon
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import SideCart from "@/components/SideCart";
-import Footer from "@/components/Footer";
 
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -52,7 +51,6 @@ export default function RootLayout({
         <Navbar />
         <main className="min-h-screen relative">{children}</main>
         <SideCart />
-        <Footer />
       </body>
     </html>
   );

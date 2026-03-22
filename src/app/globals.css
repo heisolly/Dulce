@@ -62,6 +62,9 @@ h6 {
 .font-script {
   font-family: var(--font-script);
 }
+.font-luxury {
+  font-family: var(--font-luxury);
+}
 
 /* ── Custom Scrollbar ─────────────────────────── */
 ::-webkit-scrollbar {

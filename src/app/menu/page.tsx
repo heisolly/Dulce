@@ -7,6 +7,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
 import MenuItemCard from "@/components/MenuItemCard";
+import Footer from "@/components/Footer";
 
 const supabase = createClient();
 
@@ -464,6 +465,7 @@ export default function MenuPage() {
         </motion.div>
       </section>
 
+      <Footer />
     </main>
   );
 }

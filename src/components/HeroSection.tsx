@@ -1,174 +1,150 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
-
-const CATEGORIES = [
-  { id: "Dishes", label: "Dishes", iconSrc: "/assets/Heroimg/Dishes.png", delay: 0.5, top: "10%", right: "5%" },
-  { id: "Dessert", label: "Dessert", iconSrc: "/assets/Heroimg/Dessert.png", delay: 0.6, top: "30%", right: "-2%" },
-  { id: "Drinks", label: "Drinks", iconSrc: "/assets/Heroimg/Drinks.png", delay: 0.7, top: "50%", right: "-5%" },
-  { id: "Platter", label: "Platter", iconSrc: "/assets/Heroimg/Platters.png", delay: 0.8, top: "70%", right: "-2%" },
-  { id: "Snacks", label: "Snacks", iconSrc: "/assets/Heroimg/Snacks.png", delay: 0.9, top: "90%", right: "5%" },
-];
+import { motion, useScroll, useTransform } from "framer-motion";
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLElement>(null);
-  const [activeCategory, setActiveCategory] = useState("Dishes");
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
-
-  const yText = useSpring(useTransform(scrollYProgress, [0, 1], ["0%", "15%"]), { stiffness: 60, damping: 20 });
-  const yImage = useSpring(useTransform(scrollYProgress, [0, 1], ["0%", "8%"]), { stiffness: 50, damping: 20 });
-  const rotateImage = useTransform(scrollYProgress, [0, 1], ["0deg", "12deg"]);
-
-  // Define the dynamic map directly from our list
-  const activeHeroImage = CATEGORIES.find(c => c.id === activeCategory)?.iconSrc || "/assets/Heroimg/Dishes.png";
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
+  
+  const yText = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+  const yImage = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const rotateImage = useTransform(scrollYProgress, [0, 1], ["0deg", "15deg"]);
 
   return (
-    <section
-      ref={containerRef}
-      className="relative w-full min-h-[88vh] xl:min-h-[96vh] bg-[#FFFBF8] pt-[100px] md:pt-[120px] pb-8 overflow-hidden"
+    <section 
+      ref={containerRef} 
+      className="relative w-full min-h-[100dvh] bg-[#FFF8F3] overflow-hidden flex items-center pt-[100px] pb-10 lg:pt-0 lg:pb-0"
     >
-      {/* ── Decorative pattern (Top Left) ── */}
-      <div className="absolute top-20 left-8 opacity-20 pointer-events-none">
-         <svg width="60" height="60" viewBox="0 0 60 60" fill="none" className="rotate-12">
-             <path d="M10 10c2 4 6 2 8 0 M20 30c-2 4-6 2-8 0 M40 10c2 4 6 2 8 0 M50 30c-2 4-6 2-8 0 M10 50c2 4 6 2 8 0 M30 50c2 4 6 2 8 0 M30 20c-2 4-6 2-8 0" stroke="#BF5933" strokeWidth="2.5" strokeLinecap="round"/>
-         </svg>
+      {/* ── Subtle Background Watermark & Glows ── */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+         {/* Faint repeating watermark text mimicking the reference design */}
+         <div className="absolute top-10 left-[-10%] w-[120%] flex flex-wrap gap-8 opacity-[0.03] select-none text-[#BF5933] font-script text-8xl leading-none -rotate-3">
+           {Array.from({ length: 40 }).map((_, i) => <span key={i}>dulce cafe</span>)}
+         </div>
+         <div className="absolute top-1/2 left-[-10%] w-[120%] flex flex-wrap gap-8 opacity-[0.03] select-none text-[#BF5933] font-script text-8xl leading-none -rotate-3">
+           {Array.from({ length: 40 }).map((_, i) => <span key={i}>dulce cafe</span>)}
+         </div>
+         {/* Soft glow behind the text to enhance the cream tone */}
+         <div className="absolute top-[20%] left-[-10%] w-[600px] h-[600px] bg-white rounded-full blur-[150px]" />
       </div>
 
-      {/* ── Decorative pattern (Bottom Right) ── */}
-      <div className="absolute bottom-10 right-10 opacity-20 pointer-events-none rotate-[200deg]">
-         <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-             <path d="M10 10c2 4 6 2 8 0 M20 30c-2 4-6 2-8 0 M40 10c2 4 6 2 8 0 M50 30c-2 4-6 2-8 0 M10 50c2 4 6 2 8 0 M30 50c2 4 6 2 8 0 M30 20c-2 4-6 2-8 0 M45 45c-2 4-6 2-8 0" stroke="#BF5933" strokeWidth="2.5" strokeLinecap="round"/>
-         </svg>
-      </div>
-
-      <div className="w-full max-w-[1360px] mx-auto grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-4 items-center relative z-10 px-6 md:px-12">
-        {/* ════ LEFT SIDE: TEXT & BUTTONS ════ */}
-        <motion.div style={{ y: yText }} className="flex flex-col items-start lg:pr-5 z-30 pt-4 pb-8">
-          
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="font-heading font-black text-[50px] sm:text-[65px] md:text-[75px] lg:text-[85px] leading-[1.05] tracking-[-0.03em] text-[#2D1B14] mb-4"
+      <div className="w-full max-w-[1450px] mx-auto px-6 md:px-12 xl:px-16 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] h-full items-center relative z-10 gap-10 lg:gap-0 mt-8 lg:mt-0">
+        
+        {/* ════ LEFT SIDE: TYPOGRAPHY & BUTTONS ════ */}
+        <motion.div 
+          style={{ y: yText }} 
+          className="flex flex-col items-start justify-center pt-10 lg:pt-20 xl:pr-10 w-full"
+        >
+          <motion.div
+            initial={{ opacity: 0, x: -30 }} 
+            animate={{ opacity: 1, x: 0 }} 
+            transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="flex items-center gap-4 mb-6 lg:mb-8"
           >
-            <div className="flex flex-col">
-              <span className="capitalize">We Serve The</span>
-              <span className="capitalize flex items-end">
-                <span className="font-script lowercase text-[70px] sm:text-[90px] md:text-[100px] lg:text-[110px] text-[#BF5933] italic normal-case leading-[0.7] -mb-2">Taste</span>
-                {" "}<span className="ml-[10px]">You</span>
-              </span>
-              <span className="capitalize">Love</span>
-            </div>
+            <div className="w-8 h-[1px] bg-[#BF5933]" />
+            <span className="font-heading text-[#BF5933] text-[10px] md:text-[12px] uppercase tracking-[0.4em] font-bold">
+              Artisanal Bakery
+            </span>
+          </motion.div>
+
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="font-luxury text-[#2D1B14] text-[55px] sm:text-[75px] md:text-[90px] lg:text-[110px] xl:text-[130px] leading-[0.95] tracking-[-0.02em] mb-6 flex flex-col items-start w-full"
+          >
+             <span>Discover</span>
+             <span className="flex items-center gap-4 lg:gap-6 mt-2">
+               <span className="font-script text-[#BF5933] italic font-light text-[70px] sm:text-[95px] md:text-[115px] lg:text-[145px] xl:text-[165px] leading-[0.7] pt-2 lg:pt-4">Taste</span>
+             </span>
+             <span className="mt-2">Perfection</span>
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="font-body text-[#2D1B14]/70 text-[14px] md:text-[16px] font-medium max-w-[480px] leading-[1.7] mb-8"
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="font-body text-[#2D1B14]/70 text-[15px] md:text-[17px] lg:text-[18px] max-w-[500px] leading-[1.8] mb-10 lg:mb-14 font-medium"
           >
-            This is an artisanal hideaway which typically serves handcrafted plates, rich delicacies, in addition to light refreshments such as fresh baked goods or snacks. Elevating the standard of culinary perfection.
+            Experience an artisanal hideaway serving elegant, handcrafted plates and rich delicacies. A stunning symphony of flavors thoughtfully composed in every bite.
           </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex flex-wrap items-center gap-4"
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8"
           >
-            {/* Primary Solid Button */}
-            <Link
-              href="/menu"
-              className="bg-[#DFA651] text-[#2D1B14] px-9 py-4 rounded-full font-body font-bold text-[14px] shadow-[0_12px_30px_rgba(223,166,81,0.35)] hover:bg-[#c99242] hover:shadow-[0_15px_35px_rgba(223,166,81,0.45)] hover:-translate-y-1 transition-all duration-300 active:scale-95"
+            <Link 
+              href="/menu" 
+              className="relative overflow-hidden bg-[#BF5933] text-white px-10 py-4 rounded-full font-heading text-[11px] uppercase tracking-[0.25em] font-bold transition-all duration-300 shadow-[0_10px_30px_rgba(191,89,51,0.25)] hover:bg-[#DAA28B] hover:text-[#2D1B14] hover:shadow-[0_15px_35px_rgba(191,89,51,0.4)] hover:-translate-y-1"
             >
-              Explore Food
+               Explore Menu
             </Link>
-
-            {/* Secondary Outline Search Button */}
-            <button
-              className="group flex items-center gap-3 bg-white border border-[#DFA651]/40 text-[#2D1B14] px-8 py-3.5 rounded-full font-body font-bold text-[14px] hover:border-[#DFA651] hover:shadow-lg transition-all duration-300 active:scale-95"
+            
+            <Link 
+              href="/reservations" 
+              className="flex items-center gap-3 font-heading text-[11px] uppercase tracking-[0.2em] font-bold text-[#2D1B14]/70 hover:text-[#BF5933] transition-colors duration-300 group"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="text-[#2D1B14]">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-              Search
-            </button>
-          </motion.div>
-        </motion.div>
-
-        {/* ════ RIGHT SIDE: CONCENTRIC CIRCLES & PLATE ════ */}
-        <motion.div
-           style={{ y: yImage }}
-           className="relative w-full h-[350px] sm:h-[400px] lg:h-[60vh] xl:h-[65vh] flex items-center justify-center z-10"
-        >
-          {/* Concentric rings matching exactly the screenshot style */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 1.5 }}
-              className="absolute w-[360px] h-[360px] md:w-[500px] md:h-[500px] lg:w-[650px] lg:h-[650px] rounded-full border-[1.5px] border-[#2D1B14]/[0.04]"
-            />
-            <motion.div
-               initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 1.5, delay: 0.2 }}
-               className="absolute w-[260px] h-[260px] md:w-[350px] md:h-[350px] lg:w-[480px] lg:h-[480px] rounded-full border-[1.5px] border-[#2D1B14]/[0.06]"
-            />
-          </div>
-
-          {/* Semicircle Orbiting category tags (Desktop Only) */}
-          <div className="absolute inset-0 pointer-events-none hidden lg:block z-30">
-            {CATEGORIES.map((cat) => (
-              <motion.div
-                key={cat.id}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: cat.delay }}
-                onMouseEnter={() => setActiveCategory(cat.id)}
-                className={`absolute flex items-center gap-3 pl-1.5 py-1.5 pr-5 rounded-full shadow-[0_12px_24px_rgba(45,27,20,0.08)] cursor-pointer pointer-events-auto transition-all duration-300 ${activeCategory === cat.id ? "bg-[#BF5933] scale-110 shadow-[0_15px_30px_rgba(191,89,51,0.3)] z-40" : "bg-white hover:scale-105"}`}
-                style={{ right: cat.right, top: cat.top }}
-              >
-                 <div className="w-10 h-10 md:w-11 md:h-11 rounded-full bg-white flex items-center justify-center overflow-hidden shadow-sm shrink-0">
-                    <Image src={cat.iconSrc} alt={cat.label} width={44} height={44} className="object-cover w-full h-full" />
-                 </div>
-                 <span className={`font-heading font-black text-[12px] md:text-[13px] uppercase tracking-wider transition-colors ${activeCategory === cat.id ? "text-white" : "text-[#2D1B14]"}`}>
-                   {cat.label}
-                 </span>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            style={{ rotate: rotateImage }}
-            className="relative w-[115%] h-[115%] sm:w-[125%] sm:h-[125%] lg:w-[145%] lg:h-[145%] lg:translate-x-[-6%] z-20"
-          >
-             <AnimatePresence mode="wait">
-               <motion.div
-                  key={activeCategory}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="absolute inset-0 filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.08)]"
+               Reserve A Table
+               <svg 
+                 width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" 
+                 className="transform transition-transform duration-300 group-hover:translate-x-1"
                >
-                 <Image
-                    src={activeHeroImage}
-                    alt={`${activeCategory} Signature Dish`}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 75vw"
-                    className="object-contain drop-shadow-2xl"
-                    priority
-                 />
-               </motion.div>
-             </AnimatePresence>
+                 <path d="M5 12h14M12 5l7 7-7 7"/>
+               </svg>
+            </Link>
           </motion.div>
         </motion.div>
+
+        {/* ════ RIGHT SIDE: LUXURY IMAGE SHOWCASE ════ */}
+        <motion.div 
+           className="relative w-full h-[40vh] sm:h-[50vh] lg:h-full min-h-[400px] flex items-center justify-center lg:justify-end"
+        >
+           <motion.div 
+             style={{ y: yImage, rotate: rotateImage }}
+             initial={{ opacity: 0, scale: 0.9, rotate: -15, x: 50 }}
+             animate={{ opacity: 1, scale: 1, rotate: 0, x: 0 }}
+             transition={{ duration: 1.5, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+             className="relative w-[130%] h-[130%] sm:w-[120%] sm:h-[120%] lg:w-[150%] lg:h-[110%] xl:w-[160%] xl:translate-x-16"
+           >
+              <Image 
+                src="/assets/Heroimg/Dishes.png" 
+                alt="Signature Dish" 
+                fill 
+                className="object-contain drop-shadow-[0_40px_80px_rgba(0,0,0,0.15)] scale-110 lg:scale-125 xl:scale-[1.35]" 
+                priority 
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+           </motion.div>
+           
+           {/* Floating warm ambient glow right behind the plate to pop it */}
+           <motion.div 
+             initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} transition={{ duration: 2, delay: 1 }}
+             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] lg:w-[600px] lg:h-[600px] bg-[#E2A654]/20 rounded-full blur-[100px] pointer-events-none z-[-1]"
+           />
+        </motion.div>
+
       </div>
+      
+      {/* ── Scroll Line Indicator ── */}
+      <motion.div 
+         initial={{ opacity: 0 }} 
+         animate={{ opacity: 1 }} 
+         transition={{ delay: 1.5, duration: 1 }}
+         className="absolute bottom-6 left-1/2 -translate-x-1/2 lg:left-12 lg:translate-x-0 flex flex-col items-center lg:items-start gap-3 z-30"
+      >
+         <div className="w-[1px] h-16 bg-[#2D1B14]/10 relative overflow-hidden hidden lg:block">
+            <motion.div 
+               animate={{ y: [0, 64, 64] }} 
+               transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+               className="absolute top-0 left-0 w-full h-[50%] bg-[#BF5933]"
+            />
+         </div>
+      </motion.div>
     </section>
   );
 }
