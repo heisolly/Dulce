@@ -1,0 +1,297 @@
+@import "tailwindcss";
+
+/* ── Tailwind v4 theme tokens (defined as CSS custom properties) ── */
+:root {
+  --color-rust: #bf5933;
+  --color-rust-dark: #b15e3e;
+  --color-cream: #fef7f1;
+  --color-peach: #daa28b;
+  --color-grey: #d2d2d2;
+  --color-espresso: #2d1b14;
+
+  --color-background: var(--color-cream);
+  --color-foreground: var(--color-espresso);
+  --color-primary: var(--color-rust);
+  --color-accent: var(--color-peach);
+
+  --font-heading: "Clash Display", var(--font-bricolage), system-ui, sans-serif;
+  --font-body: var(--font-dmsans, "DM Sans"), system-ui, sans-serif;
+  --font-script: var(--font-script), cursive;
+  --font-luxury: var(--font-playfair), serif;
+}
+
+/* ── Reset & base ─────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-espresso);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ── Typography helpers ───────────────────────── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+.font-body {
+  font-family: var(--font-body);
+}
+.font-script {
+  font-family: var(--font-script);
+}
+
+/* ── Custom Scrollbar ─────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-rust);
+  border-radius: 99px;
+}
+
+/* ── Selection ────────────────────────────────── */
+::selection {
+  background: var(--color-rust);
+  color: var(--color-cream);
+}
+
+/* ── Animations ───────────────────────────────── */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-14px) rotate(1deg);
+  }
+  66% {
+    transform: translateY(-7px) rotate(-1deg);
+  }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-24px) rotate(2deg);
+  }
+}
+.animate-float-slow {
+  animation: float-slow 10s ease-in-out infinite;
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin-slow {
+  animation: spin-slow 40s linear infinite;
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+}
+.animate-wiggle {
+  animation: wiggle 1.8s ease-in-out infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 24s linear infinite;
+}
+
+@keyframes grain {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-2%, -2%);
+  }
+  30% {
+    transform: translate(1%, 2%);
+  }
+  50% {
+    transform: translate(-1%, 1%);
+  }
+  70% {
+    transform: translate(2%, -1%);
+  }
+  90% {
+    transform: translate(-1%, 2%);
+  }
+}
+.animate-grain {
+  animation: grain 0.4s steps(1) infinite;
+}
+
+/* Film-grain texture overlay */
+.grain-overlay {
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 9999;
+  animation: grain 0.4s steps(1) infinite;
+}
+
+/* ── Utility classes ──────────────────────────── */
+.clip-wave {
+  clip-path: ellipse(55% 100% at 50% 0%);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Hero gradient */
+.hero-radial {
+  background:
+    radial-gradient(
+      ellipse 80% 60% at 60% 40%,
+      rgba(218, 162, 139, 0.18) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 50% 40% at 20% 80%,
+      rgba(191, 89, 51, 0.1) 0%,
+      transparent 60%
+    );
+}
+
+/* Frosted glass card */
+.glass {
+  background: rgba(254, 247, 241, 0.6);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid rgba(191, 89, 51, 0.08);
+}
+
+/* Inner border glow */
+.ring-rust {
+  box-shadow:
+    0 0 0 3px rgba(191, 89, 51, 0.15),
+    0 24px 48px rgba(191, 89, 51, 0.1);
+}
+
+/* Hover lift */
+.hover-lift {
+  transition:
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.4s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 32px 64px rgba(191, 89, 51, 0.2);
+}
+
+/* Image zoom */
+.img-zoom img {
+  transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.img-zoom:hover img {
+  transform: scale(1.08);
+}
+
+/* Marquee container */
+.marquee-container {
+  display: flex;
+  width: max-content;
+}
+
+/* ── Menu page enhancements ───────────────────────────── */
+
+/* Shimmer loading skeleton */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(254, 247, 241, 0.4) 25%,
+    rgba(218, 162, 139, 0.15) 50%,
+    rgba(254, 247, 241, 0.4) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+}
+
+/* Menu card — deep glow on hover */
+.menu-card-glow:hover {
+  box-shadow:
+    0 0 0 1px rgba(191, 89, 51, 0.18),
+    0 24px 60px rgba(191, 89, 51, 0.18),
+    0 8px 24px rgba(45, 27, 20, 0.08);
+}
+
+/* Stats strip number pulse */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.stat-number {
+  animation: countUp 0.6s ease-out both;
+}
+
+/* Smooth tab underline */
+.tab-underline {
+  transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Image parallax container must hide overflow */
+.parallax-hero {
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
