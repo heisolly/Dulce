@@ -62,8 +62,8 @@ export default function Navbar() {
           <div className="flex items-center justify-between bg-[#2D1B14] rounded-2xl md:rounded-[20px] px-6 lg:px-8 py-3.5 shadow-[0_20px_60px_rgba(0,0,0,0.3)] border border-white/5">
             {/* Logo */}
             <Link href="/" className="flex items-center flex-shrink-0 group">
-              <div className="relative group-hover:scale-105 transition-transform duration-500" style={{ height: "30px", width: "100px", position: "relative" }}>
-                <Image src="/assets/logo.png" alt="Dulce Logo" fill sizes="100px" className="object-contain" priority />
+              <div className="relative group-hover:scale-105 transition-transform duration-500" style={{ height: "40px", width: "130px", position: "relative" }}>
+                <Image src="/assets/logo.png" alt="Dulce Logo" fill sizes="130px" className="object-contain" priority />
               </div>
             </Link>
 

@@ -16,7 +16,7 @@ export default function HeroSection() {
   return (
     <section 
       ref={containerRef} 
-      className="relative w-full min-h-[100dvh] bg-[#FFF8F3] overflow-hidden flex items-center pt-[100px] pb-10 lg:pt-0 lg:pb-0"
+      className="relative w-full min-h-[100dvh] bg-[#FFF8F3] overflow-hidden flex pt-[140px] md:pt-[160px] pb-10 xl:pt-[180px] lg:pb-0"
     >
       {/* ── Subtle Background Watermark & Glows ── */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
@@ -31,12 +31,12 @@ export default function HeroSection() {
          <div className="absolute top-[20%] left-[-10%] w-[600px] h-[600px] bg-white rounded-full blur-[150px]" />
       </div>
 
-      <div className="w-full max-w-[1450px] mx-auto px-6 md:px-12 xl:px-16 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] h-full items-center relative z-10 gap-10 lg:gap-0 mt-8 lg:mt-0">
+      <div className="w-full max-w-[1450px] mx-auto px-6 md:px-12 xl:px-16 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] h-full relative z-10 gap-10 lg:gap-0">
         
         {/* ════ LEFT SIDE: TYPOGRAPHY & BUTTONS ════ */}
         <motion.div 
           style={{ y: yText }} 
-          className="flex flex-col items-start justify-center pt-10 lg:pt-20 xl:pr-10 w-full"
+          className="flex flex-col items-start justify-start xl:pr-10 w-full"
         >
           <motion.div
             initial={{ opacity: 0, x: -30 }} 
@@ -54,11 +54,11 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 30 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="font-luxury text-[#2D1B14] text-[55px] sm:text-[75px] md:text-[90px] lg:text-[110px] xl:text-[130px] leading-[0.95] tracking-[-0.02em] mb-6 flex flex-col items-start w-full"
+            className="font-luxury text-[#2D1B14] text-[48px] sm:text-[60px] md:text-[80px] lg:text-[90px] xl:text-[110px] leading-[0.95] tracking-[-0.02em] mb-6 flex flex-col items-start w-full"
           >
              <span>Discover</span>
              <span className="flex items-center gap-4 lg:gap-6 mt-2">
-               <span className="font-script text-[#BF5933] italic font-light text-[70px] sm:text-[95px] md:text-[115px] lg:text-[145px] xl:text-[165px] leading-[0.7] pt-2 lg:pt-4">Taste</span>
+               <span className="font-script text-[#BF5933] italic font-light text-[60px] sm:text-[85px] md:text-[100px] lg:text-[120px] xl:text-[140px] leading-[0.7] pt-2 lg:pt-4">Taste</span>
              </span>
              <span className="mt-2">Perfection</span>
           </motion.h1>
@@ -102,7 +102,7 @@ export default function HeroSection() {
 
         {/* ════ RIGHT SIDE: LUXURY IMAGE SHOWCASE ════ */}
         <motion.div 
-           className="relative w-full h-[40vh] sm:h-[50vh] lg:h-full min-h-[400px] flex items-center justify-center lg:justify-end"
+           className="relative w-full h-[40vh] sm:h-[50vh] lg:h-full min-h-[400px] flex items-center justify-center lg:justify-end xl:mt-[-50px]"
         >
            <motion.div 
              style={{ y: yImage, rotate: rotateImage }}
