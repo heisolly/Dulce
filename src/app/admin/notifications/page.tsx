@@ -28,7 +28,22 @@ export default function NotificationsManagement() {
 
   React.useEffect(() => {
     fetchNotifications();
+
+    // Set up Realtime Subscription for Notifications
+    const notificationsChannel = supabase
+      .channel("admin-notifications-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "notifications" },
+        () => fetchNotifications()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(notificationsChannel);
+    };
   }, []);
+
 
   const markAllAsRead = async () => {
     const { error } = await supabase.from("notifications").update({ is_read: true }).eq("is_read", false);

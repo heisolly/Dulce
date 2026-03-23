@@ -1,4 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 @import "tailwindcss";
+
 
 /* ── Tailwind v4 theme tokens (defined as CSS custom properties) ── */
 :root {
@@ -297,4 +299,3 @@ h6 {
   will-change: transform;
   backface-visibility: hidden;
 }
-

@@ -40,7 +40,22 @@ export default function InventoryManagement() {
 
   React.useEffect(() => {
     fetchInventory();
+
+    // Set up Realtime Subscription for Inventory
+    const inventoryChannel = supabase
+      .channel("admin-inventory-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "inventory" },
+        () => fetchInventory()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(inventoryChannel);
+    };
   }, []);
+
 
   const closeDrawer = () => {
     setDrawer("closed");

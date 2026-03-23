@@ -88,7 +88,22 @@ export default function StaffManagement() {
 
   React.useEffect(() => {
     fetchStaff();
+
+    // Set up Realtime Subscription for Staff
+    const staffChannel = supabase
+      .channel("admin-staff-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "staff" },
+        () => fetchStaff()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(staffChannel);
+    };
   }, []);
+
 
   const openAdd = () => {
     setSelectedStaff(null);

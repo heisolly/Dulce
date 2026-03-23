@@ -55,7 +55,31 @@ export default function OrdersManagement() {
     } else {
       fetchMenu();
     }
+
+    // Set up Realtime Subscription for Orders
+    const ordersChannel = supabase
+      .channel("admin-orders-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "orders" },
+        () => {
+          if (activeView === "list") fetchOrders();
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "order_items" },
+        () => {
+          if (activeView === "list") fetchOrders();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(ordersChannel);
+    };
   }, [activeView]);
+
 
   const fetchOrders = async () => {
     setLoadingOrders(true);

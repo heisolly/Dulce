@@ -138,7 +138,27 @@ export default function AdminDashboard() {
 
   React.useEffect(() => {
     fetchData();
+
+    // Set up Realtime Subscription for Dashboard Stats
+    const dashboardChannel = supabase
+      .channel("admin-dashboard-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "orders" },
+        () => fetchData()
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "menu_items" },
+        () => fetchData()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(dashboardChannel);
+    };
   }, []);
+
 
   return (
     <div className="flex flex-col gap-7 w-full font-body">

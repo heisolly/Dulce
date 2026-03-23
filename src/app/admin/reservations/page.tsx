@@ -64,7 +64,27 @@ export default function ReservationManagement() {
 
   React.useEffect(() => {
     fetchData();
+
+    // Set up Realtime Subscription for Reservations & Tables
+    const reservationsChannel = supabase
+      .channel("admin-reservations-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "reservations" },
+        () => fetchData()
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "tables" },
+        () => fetchData()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(reservationsChannel);
+    };
   }, []);
+
 
   const handleAddReservation = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

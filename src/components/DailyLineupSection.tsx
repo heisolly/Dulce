@@ -5,14 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 
-const MARQUEE_TEXT = [
-  "Wake up and smell the butter",
-  "Baked Fresh Daily",
-  "Our Golden Ritual",
-  "Hand-Laminated Pastries",
-  "Small-Batch Coffee",
-];
-
 const CATEGORIES = [
   {
     id: "coffee",
@@ -72,7 +64,6 @@ function StackedCard({
   const scale = useTransform(progress, range, [1, targetScale]);
   // And move it up slightly to stack behind the next card securely
   const topOffset = useTransform(progress, range, [0, -40]);
-  const opacity = useTransform(progress, range, [1, 0.4]);
 
   return (
     <div
@@ -154,34 +145,7 @@ export default function DailyLineupSection() {
 
   return (
     <section className="bg-[#2D1B14] relative text-[#FEF7F1]">
-      {/* ── Marquee ticker ── */}
-      <div className="border-t border-b border-[#BF5933]/20 py-5 overflow-hidden bg-[#2D1B14] relative z-20">
-        <div className="marquee-container animate-marquee whitespace-nowrap flex items-center">
-          {[...MARQUEE_TEXT, ...MARQUEE_TEXT].map((t, i) => (
-            <span key={i} className="inline-flex items-center gap-6 mx-8">
-              <span className="font-body text-xs font-bold uppercase tracking-[0.3em] text-[#DAA28B]">
-                {t}
-              </span>
-              <span className="text-[#BF5933]">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 18 18"
-                  fill="currentColor"
-                >
-                  <polygon points="9,0 11.5,6.5 18,6.5 13,11 15,18 9,13.5 3,18 5,11 0,6.5 6.5,6.5" />
-                </svg>
-              </span>
-            </span>
-          ))}
-        </div>
-      </div>
-
       {/* ── Stacked Scroll Container ── */}
-      {/* 
-        Container must be tall enough to scroll through. 
-        Each sticky card requires roughly 100vh of scrolling to feel pacing.
-      */}
       <div 
         ref={containerRef}
         className="relative pb-32"

@@ -44,41 +44,65 @@ export default function MenuPage() {
   const heroOp = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   /* Try Supabase, fall back to static data */
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      
-      const { data: catData, error: catErr } = await supabase.from("categories").select("*");
-      let catMap: Record<string, string> = {};
-      
-      if (catData && catData.length > 0) {
-        // Build category lookup
-        catData.forEach((c: any) => { catMap[c.id] = c.name.toLowerCase(); });
-        setCategories(catData.map((c: any) => ({ id: c.name.toLowerCase(), label: c.name })));
-        setActiveTab(catData[0]?.name.toLowerCase());
-      }
+  const load = async () => {
+    setLoading(true);
+    
+    const { data: catData, error: catErr } = await supabase.from("categories").select("*");
+    let catMap: Record<string, string> = {};
+    
+    if (catData && catData.length > 0) {
+      // Build category lookup
+      catData.forEach((c: any) => { catMap[c.id] = c.name.toLowerCase(); });
+      setCategories(catData.map((c: any) => ({ id: c.name.toLowerCase(), label: c.name })));
+      // Only set initial tab if not set or if it's currently at fallback
+      setActiveTab(prev => prev === "bakery" && catData.length > 0 ? catData[0].name.toLowerCase() : prev);
+    }
 
-      const { data: menuData } = await supabase.from("menu_items").select("*, categories(name)");
-      if (menuData && menuData.length > 0) {
-        setItems(
-          menuData.map((item: any) => {
-            const catName = item.categories?.name?.toLowerCase() || catMap[item.category_id] || "bakery";
-            return {
-              id:          item.id,
-              name:        item.name,
-              price:       item.price,
-              description: item.description || "",
-              category:    catName as any,
-              emoji:       "✨",
-              image_url:   item.image_url
-            };
-          })
-        );
-      }
-      setLoading(false);
-    };
+    const { data: menuData } = await supabase.from("menu_items").select("*, categories(name)");
+    if (menuData && menuData.length > 0) {
+      setItems(
+        menuData.map((item: any) => {
+          const catName = item.categories?.name?.toLowerCase() || catMap[item.category_id] || "bakery";
+          return {
+            id:          item.id,
+            name:        item.name,
+            price:       item.price,
+            description: item.description || "",
+            category:    catName as any,
+            emoji:       "✨",
+            image_url:   item.image_url
+          };
+        })
+      );
+    } else {
+      setItems([]);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
     load();
+
+    // Set up Realtime Subscription
+    const menuChannel = supabase
+      .channel("menu-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "menu_items" },
+        () => load()
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "categories" },
+        () => load()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(menuChannel);
+    };
   }, []);
+
 
   const filteredItems = useMemo(
     () => items.filter((i) => i.category === activeTab),

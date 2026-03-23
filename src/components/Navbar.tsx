@@ -6,237 +6,282 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore } from "@/store/cartStore";
 import { usePathname } from "next/navigation";
+import { ShoppingBag, X, Instagram, Mail, ArrowUpRight } from "lucide-react";
 
-/** Custom SVG icons */
-const CartIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
-    <line x1="3" x2="21" y1="6" y2="6" />
-    <path d="M16 10a4 4 0 0 1-8 0" />
-  </svg>
-);
-
-const MenuBars = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-    <line x1="4" y1="7" x2="20" y2="7" />
-    <line x1="4" y1="17" x2="14" y2="17" />
-  </svg>
-);
-
-const CloseIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-    <line x1="6" y1="6" x2="22" y2="22" />
-    <line x1="22" y1="6" x2="6" y2="22" />
-  </svg>
-);
-
+/* ── NAV LINKS WITH VERIFIED PREVIEW IMAGES ── */
 const navLinks = [
-  { name: "Menu", href: "/menu", subtitle: "Artisanal Bakes & Coffee", emoji: "🥐" },
-  { name: "Reservations", href: "/reservations", subtitle: "Secure Your Table", emoji: "🕯️" },
-  { name: "Blog", href: "/blog", subtitle: "Stories & Insights", emoji: "✍️" },
-  { name: "Contact", href: "/contact", subtitle: "Say Hello", emoji: "💌" },
-  { name: "Our Story", href: "/#our-story", subtitle: "The Golden Process", emoji: "🌿" },
+  { 
+    name: "The Menu", 
+    href: "/menu", 
+    subtitle: "Artisanal Bakes & Coffee",
+    preview: "/assets/Heroimg/Platters.png" 
+  },
+  { 
+    name: "Reservations", 
+    href: "/reservations", 
+    subtitle: "Secure Your Table",
+    preview: "/assets/Heroimg/Dishes.png" 
+  },
+  { 
+    name: "Journal", 
+    href: "/blog", 
+    subtitle: "Stories & Insights",
+    preview: "/assets/Heroimg/Drinks.png" 
+  },
+  { 
+    name: "Contact", 
+    href: "/contact", 
+    subtitle: "Say Hello",
+    preview: "/assets/Heroimg/Snacks.png" 
+  },
+  { 
+    name: "Our Story", 
+    href: "/#our-story", 
+    subtitle: "The Golden Process",
+    preview: "/assets/Heroimg/Dessert.png" 
+  },
 ];
+
+/* ── CUSTOM MORPHING HAMBURGER ── */
+const MorphingTrigger = ({ onClick, isDark = true }: { onClick: () => void; isDark?: boolean }) => (
+  <button
+    onClick={onClick}
+    className="group relative flex items-center justify-center w-10 h-10 focus:outline-none"
+  >
+    <div className={`absolute inset-0 border rounded-full scale-0 group-hover:scale-100 transition-transform duration-700 ${isDark ? "border-[#B55B3A]/20" : "border-white/20"}`} />
+    <div className="relative w-6 h-[12px] flex flex-col justify-between items-end overflow-hidden">
+      <motion.div 
+        className={`h-[1.5px] rounded-full ${isDark ? "bg-[#2D1B14]" : "bg-[#FEF7F1]"}`}
+        animate={{ width: "100%" }}
+        whileHover={{ x: -4 }}
+        style={{ width: "24px" }}
+      />
+      <motion.div 
+        className={`h-[1.5px] rounded-full ${isDark ? "bg-[#2D1B14]" : "bg-[#FEF7F1]/60"}`}
+        animate={{ width: "60%" }}
+        whileHover={{ x: -2, width: "100%" }}
+        style={{ width: "14px" }}
+      />
+    </div>
+  </button>
+);
+
 export default function Navbar() {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  
   const totalItems = useCartStore((s) => s.totalItems());
   const toggleCart = useCartStore((s) => s.toggleCart);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 80);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     if (sidebarOpen) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "";
   }, [sidebarOpen]);
+
   if (pathname.startsWith("/admin")) return null;
 
   return (
     <>
-      {/* ── Universal Floating Navbar ──────────────── */}
-      <div className="fixed top-0 left-0 right-0 z-50 pt-5 px-4 md:px-8 pointer-events-none">
-        <motion.nav
-          initial={{ y: -50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-[1400px] mx-auto pointer-events-auto"
-        >
-          <div className="flex items-center justify-between bg-[#2D1B14] rounded-2xl md:rounded-[20px] px-6 lg:px-8 py-3.5 shadow-[0_20px_60px_rgba(0,0,0,0.3)] border border-white/5">
-            {/* Logo */}
-            <Link href="/" className="flex items-center flex-shrink-0 group">
-              <div className="relative group-hover:scale-105 transition-transform duration-500" style={{ height: "40px", width: "130px", position: "relative" }}>
-                <Image src="/assets/logo.png" alt="Dulce Logo" fill sizes="130px" className="object-contain" priority />
-              </div>
-            </Link>
+      {/* ── 1. The Integrated Hero Header (Transparent) ── */}
+      <div 
+        className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          isScrolled ? "opacity-0 -translate-y-32" : "opacity-100 translate-y-0"
+        }`}
+      >
+        <div className="max-w-[1700px] mx-auto px-6 md:px-12 h-24 md:h-32 flex items-center justify-between pointer-events-auto">
+          
+          {/* Left Nav (PC) */}
+          <div className="flex-1 hidden md:flex items-center gap-8 lg:gap-14">
+            {["The Menu", "Reservations"].map((name) => {
+              const href = name === "The Menu" ? "/menu" : "/reservations";
+              return (
+                <Link
+                  key={name}
+                  href={href}
+                  className={`font-heading text-[10px] md:text-[12px] uppercase tracking-[0.5em] font-black transition-all duration-500 hover:text-[#B55B3A] ${
+                    pathname === href ? "text-[#B55B3A]" : "text-[#2D1B14]"
+                  }`}
+                >
+                  {name}
+                </Link>
+              );
+            })}
+          </div>
 
-            {/* Center links */}
-            <div className="hidden lg:flex items-center gap-8 xl:gap-10">
-              {navLinks.map((l) => {
-                const isActive = pathname === l.href;
+          {/* Centered Logo (INCREASED SIZE) */}
+          <Link href="/" className="px-4 md:px-16 group">
+            <div className="relative w-[180px] md:w-[280px] h-[60px] md:h-[90px] transition-transform duration-700 group-hover:scale-105">
+              <Image src="/assets/logo.png" alt="Dulce Logo" fill sizes="280px" className="object-contain" priority />
+            </div>
+          </Link>
+
+          {/* Right Nav (PC) */}
+          <div className="flex-1 flex items-center justify-end gap-6 md:gap-10">
+            <div className="hidden xl:flex items-center gap-12 lg:gap-14 mr-10">
+              {["Journal", "Contact"].map((name) => {
+                const href = name === "Journal" ? "/blog" : "/contact";
                 return (
                   <Link
-                    key={l.name}
-                    href={l.href}
-                    className={`font-body text-[11px] xl:text-[12px] uppercase tracking-[0.14em] font-bold transition-all duration-300 relative group/link ${
-                      isActive ? "text-[#FEF7F1]" : "text-[#FEF7F1]/50 hover:text-[#FEF7F1]"
+                    key={name}
+                    href={href}
+                     className={`font-heading text-[11px] md:text-[12px] uppercase tracking-[0.5em] font-black transition-all duration-500 hover:text-[#B55B3A] ${
+                      pathname === href ? "text-[#B55B3A]" : "text-[#2D1B14]"
                     }`}
                   >
-                    {l.name}
-                    <span 
-                      className={`absolute -bottom-1 left-1/2 -translate-x-1/2 h-[1.5px] bg-[#BF5933] transition-all duration-300 ${
-                        isActive ? "w-full" : "w-0 group-hover/link:w-[40%]"
-                      }`} 
-                    />
+                    {name}
                   </Link>
-                );
+                )
               })}
             </div>
 
-            {/* Actions */}
-            <div className="flex items-center gap-4 lg:gap-6">
-              {/* Bag Icon */}
-              <button onClick={toggleCart} className="relative text-[#FEF7F1]/60 hover:text-[#FEF7F1] transition-all flex items-center justify-center p-1">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                  <line x1="3" y1="6" x2="21" y2="6" />
-                  <path d="M16 10a4 4 0 0 1-8 0" />
-                </svg>
+            {/* Action Group */}
+            <div className="flex items-center gap-4 md:gap-8 pl-4 md:pl-8 border-l border-[#2D1B14]/10">
+              <button onClick={toggleCart} className="relative group text-[#2D1B14] hover:text-[#B55B3A] transition-colors">
+                <ShoppingBag size={22} strokeWidth={2.5} />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#BF5933] text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                  <span className="absolute -top-2 -right-2 bg-[#B55B3A] text-white text-[8px] font-black w-5 h-5 flex items-center justify-center rounded-full">
                     {totalItems}
                   </span>
                 )}
               </button>
-
-              {/* RESERVE button */}
-              <Link
-                href="/reservations"
-                className="hidden sm:flex items-center justify-center bg-[#BF5933] text-[#FEF7F1] px-5 py-2.5 rounded-[12px] font-heading text-[10px] xl:text-[11px] font-black uppercase tracking-[0.18em] hover:bg-[#DAA28B] hover:text-[#2D1B14] transition-all"
-              >
-                RESERVE
-              </Link>
-
-              {/* Hamburger */}
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="flex flex-col items-center justify-center w-10 h-10 rounded-full border border-white/10 text-[#FEF7F1]/70 hover:bg-white/5 hover:text-[#FEF7F1] hover:border-white/30 transition-all gap-[4px]"
-              >
-                <div className="w-3.5 h-[1.5px] bg-currentColor rounded" />
-                <div className="w-3.5 h-[1.5px] bg-currentColor rounded" />
-              </button>
+              <MorphingTrigger onClick={() => setSidebarOpen(true)} isDark={true} />
             </div>
           </div>
-        </motion.nav>
+        </div>
       </div>
 
-      {/* ── 4. Ultra-Luxury Full-Screen Menu Overlay ──────────────────────────── */}
+      {/* ── 2. The Floating Scrolled Trigger Overlay ── */}
+      <AnimatePresence>
+        {isScrolled && !sidebarOpen && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8, x: 50 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            exit={{ opacity: 0, scale: 0.8, x: 50 }}
+            className="fixed top-6 right-6 z-[70]"
+          >
+            <div className="p-4 bg-[#2D1B14] rounded-full shadow-[0_20px_60px_rgba(0,0,0,0.5)] border border-white/10 group cursor-pointer" onClick={() => setSidebarOpen(true)}>
+               <MorphingTrigger onClick={() => {}} isDark={false} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── 3. The Fully Responsive Side Navbar ── */}
       <AnimatePresence>
         {sidebarOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-[100] bg-[#150C09] flex flex-col md:flex-row"
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-[200] bg-[#150C09] overflow-hidden flex flex-col md:flex-row"
           >
-            {/* Left side – decorative image (hidden on mobile) */}
-            <div className="hidden md:block relative w-1/2 h-full overflow-hidden bg-[#2D1B14]">
-              <motion.div
-                initial={{ scale: 1.1, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 1.2, ease: "easeOut" }}
-                className="absolute inset-0"
-              >
-                <Image
-                  src="/assets/SaveGram.App_639497783_18093782330473296_5334377840370386583_n.jpg"
-                  alt="Dulce Atmosphere"
-                  fill
-                  className="object-cover opacity-60"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#150C09]/80 via-[#150C09]/20 to-transparent" />
-                <div className="absolute inset-0 bg-[#BF5933]/10 mix-blend-overlay" />
-              </motion.div>
-              
-              <div className="absolute bottom-16 left-16 z-10 max-w-sm">
-                <p className="font-heading text-[10px] font-black uppercase tracking-[0.5em] text-[#DAA28B]/80 mb-4">Golden Crust</p>
-                <p className="font-luxury text-3xl text-[#FEF7F1] leading-snug">
-                  An exclusive hideaway. <br />
-                  <span className="font-script lowercase text-[#DAA28B] text-4xl italic">Hand-laminated</span> precision.
-                </p>
-              </div>
+            {/* Split Image Section (PC Only) */}
+            <div className="hidden md:block relative w-[35%] lg:w-[40%] h-full border-r border-white/5 overflow-hidden">
+               <AnimatePresence mode="wait">
+                 <motion.div
+                    key={hoveredIndex || "default"}
+                    initial={{ opacity: 0, scale: 1.1 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.05 }}
+                    transition={{ duration: 1.2, ease: "circOut" }}
+                    className="absolute inset-0"
+                 >
+                    <Image 
+                      src={hoveredIndex !== null ? navLinks[hoveredIndex].preview : navLinks[0].preview} 
+                      alt="Preview" 
+                      fill 
+                      className="object-cover opacity-60 transition-all duration-[2s]" 
+                    />
+                 </motion.div>
+               </AnimatePresence>
+               <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#150C09]" />
             </div>
 
-            {/* Right side – Menu links */}
-            <div className="relative w-full md:w-1/2 h-full flex flex-col px-8 md:px-16 xl:px-24">
-              
-              {/* Close button & Logo top bar */}
-              <div className="flex items-center justify-between pt-10 pb-4">
-                <Link href="/" onClick={() => setSidebarOpen(false)} className="relative block md:hidden" style={{ height: "40px", width: "120px" }}>
-                  <Image src="/assets/logo.png" alt="Dulce" fill className="object-contain" />
-                </Link>
-                <div className="hidden md:block" /> {/* spacer */}
+            {/* Content Section (Mobile & PC) */}
+            <div className="relative z-20 flex-1 flex flex-col h-full overflow-y-auto">
+               
+               {/* Mobile Image Layer */}
+               <div className="absolute inset-0 md:hidden pointer-events-none opacity-20">
+                  <Image src={hoveredIndex !== null ? navLinks[hoveredIndex].preview : navLinks[0].preview} alt="" fill className="object-cover" />
+                  <div className="absolute inset-0 bg-[#150C09]/80" />
+               </div>
 
-                <button
-                  onClick={() => setSidebarOpen(false)}
-                  className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-[#DAA28B] hover:bg-[#DAA28B]/10 hover:rotate-90 transition-all duration-500 group"
-                >
-                  <CloseIcon />
-                </button>
-              </div>
-
-              {/* Main links list */}
-              <div className="flex-1 flex flex-col justify-center gap-6 sm:gap-8">
-                {navLinks.map((l, i) => (
-                  <motion.div
-                    key={l.name}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.15 + i * 0.08, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+               {/* Header Area */}
+               <div className="flex items-center justify-between p-8 md:p-12">
+                  <Link href="/" onClick={() => setSidebarOpen(false)} className="relative block h-[40px] w-[140px] md:h-[50px] md:w-[160px]">
+                    <Image src="/assets/logo.png" alt="Dulce" fill className="object-contain filter brightness-[100]" />
+                  </Link>
+                  <button
+                    onClick={() => setSidebarOpen(false)}
+                    className="w-12 h-12 md:w-14 md:h-14 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:bg-[#B55B3A] hover:text-white hover:border-[#B55B3A] transition-all duration-700 group hover:rotate-90"
                   >
-                    <Link
-                      href={l.href}
-                      onClick={() => setSidebarOpen(false)}
-                      className="group flex flex-col self-start transition-all"
-                    >
-                      <div className="flex items-baseline gap-4 md:gap-6">
-                        <span className="font-script text-2xl md:text-3xl text-[#DAA28B] italic opacity-60 group-hover:opacity-100 transition-opacity">
-                          0{i + 1}
-                        </span>
-                        <span className="font-luxury text-[clamp(40px,6vw,72px)] text-[#FEF7F1] group-hover:text-[#DAA28B] transition-colors leading-none tracking-tight">
-                          {l.name}
-                        </span>
-                      </div>
-                      <span className="font-heading text-[9px] md:text-[11px] uppercase tracking-[0.4em] text-white/30 ml-10 md:ml-14 mt-3 group-hover:text-white/60 transition-colors">
-                        {l.subtitle}
-                      </span>
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
+                    <X size={24} />
+                  </button>
+               </div>
 
-              {/* Bottom footer area */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.7 }}
-                className="pt-8 pb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-8 border-t border-white/5"
-              >
-                <div>
-                  <p className="font-heading text-[10px] font-black uppercase tracking-[0.4em] text-[#DAA28B] mb-3">Reservations</p>
-                  <a href="tel:07049162291" className="font-body text-white/70 hover:text-white transition-colors text-sm">
-                    070 491 62291
-                  </a>
-                  <p className="font-body text-white/40 text-xs mt-1">Open daily 8AM – 8PM</p>
-                </div>
+               {/* Navigation Links Area - COMPACT VERTICAL LAYOUT */}
+               <div className="flex-1 px-8 md:px-20 py-4 flex flex-col justify-start gap-4 md:gap-6 lg:gap-8">
+                 {navLinks.map((l, i) => (
+                   <motion.div
+                     key={l.name}
+                     initial={{ opacity: 0, x: 50 }}
+                     animate={{ opacity: 1, x: 0 }}
+                     transition={{ delay: 0.1 + i * 0.05 }}
+                     onMouseEnter={() => setHoveredIndex(i)}
+                     onMouseLeave={() => setHoveredIndex(null)}
+                   >
+                     <Link
+                       href={l.href}
+                       onClick={() => setSidebarOpen(false)}
+                       className="group inline-flex flex-col items-start"
+                     >
+                        <div className="flex items-baseline gap-4 md:gap-6">
+                           <span 
+                             className="text-white/20 group-hover:text-[#B55B3A] transition-all duration-700 leading-tight block select-none"
+                             style={{ 
+                               fontFamily: "'Pacifico', cursive",
+                               fontSize: "clamp(30px, 4.5vw, 68px)"
+                             }}
+                           >
+                             {l.name}
+                           </span>
+                           <ArrowUpRight className="text-[#B55B3A] opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-500" size={20} />
+                        </div>
+                        <p className="font-heading text-[8px] md:text-[10px] font-black uppercase tracking-[0.4em] text-white/5 group-hover:text-white/40 transition-all duration-1000 group-hover:tracking-[0.6em]">
+                          {l.subtitle}
+                        </p>
+                     </Link>
+                   </motion.div>
+                 ))}
+               </div>
 
-                <div className="flex gap-4">
-                  <a href="https://instagram.com/dulcecafeng" target="_blank" rel="noopener noreferrer" className="text-white/30 hover:text-[#DAA28B] transition-colors font-heading text-[11px] uppercase tracking-widest font-black">
-                    Instagram
-                  </a>
-                  <a href="mailto:hello@dulcecafe.ng" className="text-white/30 hover:text-[#DAA28B] transition-colors font-heading text-[11px] uppercase tracking-widest font-black">
-                    Email
-                  </a>
-                </div>
-              </motion.div>
+               {/* Footer Rituals Area */}
+               <div className="p-8 md:p-12 border-t border-white/5 bg-[#150C09]">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                     <div className="flex flex-col gap-1">
+                        <p className="font-heading text-[9px] font-black uppercase tracking-[0.5em] text-[#B55B3A]/60">Divine Inquiries</p>
+                        <a href="tel:07049162291" className="font-heading text-2xl md:text-3xl font-black text-white hover:text-[#B55B3A] transition-colors leading-none">070 491 62291</a>
+                     </div>
+                     <div className="flex items-center gap-6">
+                        <a href="https://instagram.com/dulcecafeng" target="_blank" className="text-white/20 hover:text-white transition-all transform hover:rotate-12">
+                           <Instagram size={24} />
+                        </a>
+                        <a href="mailto:hello@dulcecafe.ng" className="text-white/20 hover:text-white transition-all transform hover:-rotate-12">
+                           <Mail size={24} />
+                        </a>
+                        <span className="font-heading text-[8px] font-black uppercase tracking-[0.4em] text-white/10">Instagram Ritual</span>
+                     </div>
+                  </div>
+               </div>
 
             </div>
           </motion.div>
